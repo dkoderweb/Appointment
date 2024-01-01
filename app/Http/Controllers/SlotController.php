@@ -48,7 +48,7 @@ class SlotController extends Controller
             'day' => 'required',
             'duration' => 'required|max:2',
             'start_time' => 'required',
-            'end_time' => 'required',
+            'end_time' => 'required|after:start_time',  
         ]);
         $slot = new Slot;
         $slot->user_id = auth()->user()->id;
@@ -96,7 +96,7 @@ class SlotController extends Controller
             'day' => 'required',
             'duration' => 'required|max:2',
             'start_time' => 'required',
-            'end_time' => 'required',
+            'end_time' => 'required|after:start_time',  
         ]);
         $slot = Slot::find($id);
         $slot->user_id = auth()->user()->id;
@@ -136,11 +136,9 @@ class SlotController extends Controller
     {
         $timeSlots = [];
         $currentTime = clone $startDate;
-
         while ($currentTime <= $endDate) {
             $endTimeSlot = clone $currentTime;
             $endTimeSlot->addMinutes($duration);
-
             $timeSlots[] = [
                 'start' => $currentTime->format('H:i'),
                 'end' => $endTimeSlot->format('H:i'),
@@ -157,7 +155,7 @@ class SlotController extends Controller
         $timeRange = $request->input('selected_slot');
     
         $existingBooking = Appointment::where([
-            'user_id' => auth()->user()->id,
+            'email' => $request->email,
             'selected_date' => $selectedDate,
             'selected_slot' => $timeRange,
         ])->exists();
@@ -167,7 +165,7 @@ class SlotController extends Controller
         }
     
         $data = [
-            'user_id' => auth()->user()->id,
+            'email' => $request->email,
             'selected_date' => $selectedDate,
             'selected_slot' => $timeRange,
         ];

@@ -123,6 +123,7 @@
                     },
                     error: function(response) {
                         toastr.error(response.responseJSON.error || 'Booking failed. Please try again.');
+                        $("#bookButton").html('Book');
                     }
                 });
             });

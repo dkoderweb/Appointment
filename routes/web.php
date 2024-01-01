@@ -19,14 +19,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/', [SlotController::class, 'home'])->name('home');
+Route::post('/fetch-slot', [SlotController::class, 'fetchSlot'])->name('fetchSlot');
+Route::post('/book-appointment', [SlotController::class, 'bookAppointment'])->name('bookAppointment');
+
+
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth', 'isadmin'])->group(function () {
-    Route::get('/', [SlotController::class, 'home'])->name('home');
     Route::get('/dashboard', [SlotController::class, 'index'])->name('dashboard');
     Route::resource('slot', SlotController::class);
-    Route::post('/fetch-slot', [SlotController::class, 'fetchSlot'])->name('fetchSlot');
-    Route::post('/book-appointment', [SlotController::class, 'bookAppointment'])->name('bookAppointment');
 });
